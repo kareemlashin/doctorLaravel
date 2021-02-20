@@ -1,0 +1,14 @@
+tableClinic
+addClinic
+editClinic
+
+model
+
+clinic
+
+clinicGallery
+
+clinicService
+
+request
+clinic

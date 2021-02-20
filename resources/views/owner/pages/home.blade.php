@@ -1,0 +1,9 @@
+@extends('owner.layout.layout')
+@section('content')
+@endsection
+@section('css')
+@endsection
+@section('script')
+@endsection
+@section('scriptjs')
+@endsection
