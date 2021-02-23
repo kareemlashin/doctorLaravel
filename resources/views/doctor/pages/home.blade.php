@@ -4,7 +4,6 @@
 @section('namePage')
 @endsection
 @section('content')
-{{$doctor}}
 @endsection
 @section('scriptJs')
 @endsection

@@ -45,15 +45,22 @@ class User extends Authenticatable
     {
         return $this->hasOne(roleUser::class,'user_id');
     }
+
     public function doctorprofile()
     {
         return $this->hasOne(profiledoctor::class,'user_id');
     }
+
     public function userrate(){
         return $this->hasMany(ratingPost::class,'user_id');
     }
+
     public function likesUserPost(){
         return $this->hasMany(likepost::class,'user_id');
     }
 
+    public function patient()
+    {
+        return $this->hasOne(patient::class,'user_id');
+    }
 }

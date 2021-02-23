@@ -17,5 +17,9 @@ class gender extends Model
     {
         return $this->hasMany(profiledoctor::class,'gender_id');
     }
+    public function genderPatient()
+    {
+        return $this->hasMany(patient::class,'gender_id');
+    }
 
 }

@@ -5,7 +5,6 @@ trait Image
 {
     public function UploadImage($path, $request, $name)
     {
-
         $image_name = $name . time();
         $ext = strtolower($request->getClientOriginalExtension());
         $image_full_name = $image_name . '.' . $ext;

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\patient;
 use App\Models\profiledoctor;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
@@ -93,6 +94,10 @@ class RegisterController extends Controller
             $User->syncRolesWithoutDetaching([4]);
             return $User;
         }else if($data->type ==5){
+            patient::create([
+                'user_id'=> $User->id
+            ]);
+            $User->syncRolesWithoutDetaching([5]);
             return $User;
         }else{
             return $User;

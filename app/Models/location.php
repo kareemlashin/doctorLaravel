@@ -17,4 +17,8 @@ class location extends Model
     {
         return $this->hasMany(profiledoctor::class,'location_id');
     }
+    public function locationPatient()
+    {
+        return $this->hasMany(patient::class,'gender_id');
+    }
 }

@@ -82,7 +82,7 @@
                             @if($doctor->doctorprofile->profile)
 
                                 <figure class="author-image">
-                                    <img src="{{asset('assets/images/resource/author-1.png')}}" alt="">
+                                    <img src="{{asset($doctor->doctorprofile->profile)}}" alt="">
                                 </figure>
                             @else
                                 <figure class="author-image">
@@ -244,7 +244,16 @@
                         <li><a href=""><i class="fas fa-comments"></i>Messages</a><span>20</span></li>
                         <li><a href=""><i class="fas fa-user"></i>My Profile</a></li>
                         <li><a href=""><i class="fas fa-unlock-alt"></i>Change Password</a></li>
-                        <li><a href=""><i class="fas fa-sign-out-alt"></i>Logout</a></li>
+                        <li><a href="{{ route('logout') }}"
+                               onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();"><i class="fas fa-sign-out-alt"></i>
+                                    {{ __('Logout') }}
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+
+                            </li>
                     </ul>
                 </div>
             </div>

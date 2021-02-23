@@ -9,7 +9,7 @@ Route::get('/', function () {
     if (Auth::check()) {
         if (Auth::user()->hasRole(['doctor'])) {
             return redirect()->route('homeDoctor');
-        } else if (Auth::user()->hasRole(['Patient'])) {
+        } else if (Auth::user()->hasRole(['patient'])) {
             return redirect()->route('homePatient');
         } else if (Auth::user()->hasRole(['owner'])) {
             return redirect()->route('ownerHome');
@@ -34,7 +34,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::group(['middleware' => ['role:doctor', 'auth'], 'prefix' => 'doctor'], function () {
     Route::group(['namespace' => 'App\Http\Controllers' ], function () {
-
         Route::get('', 'doctorController@index')->name('homeDoctor');
         Route::get('profileDoctor', 'doctorController@profileDoctor')->name('profileDoctor');
         Route::get('editDoctor', 'doctorController@editDoctor')->name('editDoctor');
@@ -88,12 +87,36 @@ Route::group(['middleware' => ['role:doctor', 'auth'], 'prefix' => 'doctor'], fu
 });
 //
 
+Route::group(['middleware' => ['role:patient', 'auth'], 'prefix' => 'patient'], function () {
+        Route::group(['namespace' => 'App\Http\Controllers' ], function () {
+            Route::get('', 'patientController@index')->name('homePatient');
+            Route::get('editProfilePatient', 'patientController@editProfile')->name('editProfilePatient');
+            Route::post('updateProfile', 'patientController@updateProfile')->name('updateProfile');
+            Route::get('patientProfile', 'patientController@patientProfile')->name('patientProfile');
+            Route::post('createSyndrome', 'patientController@createSyndrome')->name('createSyndrome');
+            Route::get('addSyndrome', 'patientController@addSyndrome')->name('addSyndrome');
+            Route::get('tableSyndromes', 'patientController@tableSyndromes')->name('tableSyndromes');
+            Route::post('deleteSyndromes', 'patientController@deleteSyndromes')->name('deleteSyndromes');
 
-Route::group(['middleware' => ['role:Patient', 'auth'], 'prefix' => 'Patient'], function () {
-    Route::get('', function () {
-        return view('patient.pages.home', 'auth');
-    })->name('homePatient');
+
+            Route::post('createDiseases', 'patientController@createDiseases')->name('createDiseases');
+            Route::get('addDiseases', 'patientController@addDiseases')->name('addDiseases');
+            Route::get('tableDiseases', 'patientController@tableDiseases')->name('tableDiseases');
+            Route::post('deleteDiseases', 'patientController@deleteDiseases')->name('deleteDiseases');
+
+
+            Route::post('createMedicalTest', 'patientController@createMedicalTest')->name('createMedicalTest');
+            Route::get('addMedicalTest', 'patientController@addMedicalTest')->name('addMedicalTest');
+            Route::get('tableMedicalTest', 'patientController@tableMedicalTest')->name('tableMedicalTest');
+            Route::post('deleteMedicalTest', 'patientController@deleteMedicalTest')->name('deleteMedicalTest');
+
+            Route::post('createXray', 'patientController@createXray')->name('createXray');
+            Route::get('addXray', 'patientController@addXray')->name('addXray');
+            Route::get('tableXray', 'patientController@tableXray')->name('tableXray');
+            Route::post('deleteXray', 'patientController@deleteXray')->name('deleteXray');
+        });
 });
+
 Route::group(['middleware' => ['role:SubAdmin', 'auth'], 'prefix' => 'SubAdmin'], function () {
     Route::get('', function () {
         return view('SubAdmin.pages.home');
