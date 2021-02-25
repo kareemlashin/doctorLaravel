@@ -31,9 +31,8 @@ Route::get('/', function () {
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
-
 Route::group(['middleware' => ['role:doctor', 'auth'], 'prefix' => 'doctor'], function () {
-    Route::group(['namespace' => 'App\Http\Controllers' ], function () {
+    Route::group(['namespace' => 'App\Http\Controllers'], function () {
         Route::get('', 'doctorController@index')->name('homeDoctor');
         Route::get('profileDoctor', 'doctorController@profileDoctor')->name('profileDoctor');
         Route::get('editDoctor', 'doctorController@editDoctor')->name('editDoctor');
@@ -88,35 +87,43 @@ Route::group(['middleware' => ['role:doctor', 'auth'], 'prefix' => 'doctor'], fu
 //
 
 Route::group(['middleware' => ['role:patient', 'auth'], 'prefix' => 'patient'], function () {
-        Route::group(['namespace' => 'App\Http\Controllers' ], function () {
-            Route::get('', 'patientController@index')->name('homePatient');
-            Route::get('editProfilePatient', 'patientController@editProfile')->name('editProfilePatient');
-            Route::post('updateProfile', 'patientController@updateProfile')->name('updateProfile');
-            Route::get('patientProfile', 'patientController@patientProfile')->name('patientProfile');
-            Route::post('createSyndrome', 'patientController@createSyndrome')->name('createSyndrome');
-            Route::get('addSyndrome', 'patientController@addSyndrome')->name('addSyndrome');
-            Route::get('tableSyndromes', 'patientController@tableSyndromes')->name('tableSyndromes');
-            Route::post('deleteSyndromes', 'patientController@deleteSyndromes')->name('deleteSyndromes');
+    Route::group(['namespace' => 'App\Http\Controllers'], function () {
+        Route::get('', 'patientController@index')->name('homePatient');
+        Route::get('editProfilePatient', 'patientController@editProfile')->name('editProfilePatient');
+        Route::post('updateProfile', 'patientController@updateProfile')->name('updateProfile');
+        Route::get('patientProfile', 'patientController@patientProfile')->name('patientProfile');
+        Route::post('createSyndrome', 'patientController@createSyndrome')->name('createSyndrome');
+        Route::get('addSyndrome', 'patientController@addSyndrome')->name('addSyndrome');
+        Route::get('tableSyndromes', 'patientController@tableSyndromes')->name('tableSyndromes');
+        Route::post('deleteSyndromes', 'patientController@deleteSyndromes')->name('deleteSyndromes');
 
 
-            Route::post('createDiseases', 'patientController@createDiseases')->name('createDiseases');
-            Route::get('addDiseases', 'patientController@addDiseases')->name('addDiseases');
-            Route::get('tableDiseases', 'patientController@tableDiseases')->name('tableDiseases');
-            Route::post('deleteDiseases', 'patientController@deleteDiseases')->name('deleteDiseases');
+        Route::post('createDiseases', 'patientController@createDiseases')->name('createDiseases');
+        Route::get('addDiseases', 'patientController@addDiseases')->name('addDiseases');
+        Route::get('tableDiseases', 'patientController@tableDiseases')->name('tableDiseases');
+        Route::post('deleteDiseases', 'patientController@deleteDiseases')->name('deleteDiseases');
 
 
-            Route::post('createMedicalTest', 'patientController@createMedicalTest')->name('createMedicalTest');
-            Route::get('addMedicalTest', 'patientController@addMedicalTest')->name('addMedicalTest');
-            Route::get('tableMedicalTest', 'patientController@tableMedicalTest')->name('tableMedicalTest');
-            Route::post('deleteMedicalTest', 'patientController@deleteMedicalTest')->name('deleteMedicalTest');
+        Route::post('createMedicalTest', 'patientController@createMedicalTest')->name('createMedicalTest');
+        Route::get('addMedicalTest', 'patientController@addMedicalTest')->name('addMedicalTest');
+        Route::get('tableMedicalTest', 'patientController@tableMedicalTest')->name('tableMedicalTest');
+        Route::post('deleteMedicalTest', 'patientController@deleteMedicalTest')->name('deleteMedicalTest');
 
-            Route::post('createXray', 'patientController@createXray')->name('createXray');
-            Route::get('addXray', 'patientController@addXray')->name('addXray');
-            Route::get('tableXray', 'patientController@tableXray')->name('tableXray');
-            Route::post('deleteXray', 'patientController@deleteXray')->name('deleteXray');
-        });
+        Route::post('createXray', 'patientController@createXray')->name('createXray');
+        Route::get('addXray', 'patientController@addXray')->name('addXray');
+        Route::get('tableXray', 'patientController@tableXray')->name('tableXray');
+        Route::post('deleteXray', 'patientController@deleteXray')->name('deleteXray');
+        Route::get('allPosts', 'patientController@posts')->name('allPosts');
+        Route::get('getPosts', 'patientController@getPosts')->name('getPosts');
+        Route::get('singlePost/{id}', 'patientController@singlePost')->name('singlePost');
+        Route::get('filter', 'patientController@filter')->name('filter');
+        Route::post('ratingPostPatient', 'patientController@ratingPost')->name('ratingPostPatient');
+        Route::post('likePostPatient', 'patientController@createOrRemoveLikePost')->name('likePostPatient');
+        Route::get('pag', 'patientController@pag')->name('pag');
+
+    });
 });
-
+//
 Route::group(['middleware' => ['role:SubAdmin', 'auth'], 'prefix' => 'SubAdmin'], function () {
     Route::get('', function () {
         return view('SubAdmin.pages.home');

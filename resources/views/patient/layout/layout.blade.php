@@ -169,7 +169,14 @@
         <div class="left-panel">
             <div class="profile-box patient-profile">
                 <div class="upper-box">
-                    <figure class="profile-image"><img src="{{asset($patient->patient->profile)}}" alt=""></figure>
+                    <figure class="profile-image">
+                        @if($patient->patient->profile)
+                        <img src="{{asset($patient->patient->profile)}}" alt=""></figure>
+                    @else
+                        <img src="{{asset('upload/image/gender_1613020276.png')}}" class="max-height" alt="">
+
+                    @endif
+
                     <div class="title-box centred">
                         <div class="inner">
                             <h3>{{$patient->name}}</h3>
@@ -199,6 +206,7 @@
 
                         <li><a href=""><i class="fas fa-heart"></i>all product</a></li>
                         <li><a href=""><i class="fas fa-heart"></i>all product</a></li>
+                        <li><a href="{{route('allPosts')}}"><i class="fas fa-heart"></i>all posts</a></li>
                         <li><a href="{{ route('logout') }}"
                                onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();"><i class="fas fa-sign-out-alt"></i>

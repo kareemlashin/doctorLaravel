@@ -29,7 +29,8 @@
                         <div class="my-2 mx-4">
                             <h3 class="pt-3 mx-3 clearfix">
                                 edit experience
-                                <a class="btn btn-rounded theme-btn-one px-3 py-1  float-right" href="{{route('tableAllExperience')}}">table experience</a>
+                                <a class="btn btn-rounded theme-btn-one px-3 py-1  float-right"
+                                   href="{{route('tableAllExperience')}}">table experience</a>
 
                             </h3>
                         </div>
@@ -38,14 +39,16 @@
                             <input name="id" value="{{$experience->id}}" type="hidden">
                             <div class="col-lg-6 col-md-6  form-group">
                                 <label>name arabic </label>
-                                <input type="text" name="name_ar" value="{{$experience->name_ar}}" placeholder="name arabic">
+                                <input type="text" name="name_ar" value="{{$experience->name_ar}}"
+                                       placeholder="name arabic">
                                 <div>
                                     <div class="error error-name_ar"></div>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6  form-group">
                                 <label>name english </label>
-                                <input type="text" name="name_en" value="{{$experience->name_en}}"  placeholder="name english">
+                                <input type="text" name="name_en" value="{{$experience->name_en}}"
+                                       placeholder="name english">
                                 <div>
                                     <div class="error error-name_en"></div>
                                 </div>
@@ -53,25 +56,26 @@
 
                             <div class="col-lg-6 col-md-6  form-group">
                                 <label>description english </label>
-                                <input type="text" name="description_en" value="{{$experience->description_en}}"  placeholder="description english">
+                                <input type="text" name="description_en" value="{{$experience->description_en}}"
+                                       placeholder="description english">
                                 <div>
                                     <div class="error error-description_en"></div>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6  form-group">
                                 <label>description arabic </label>
-                                <input type="text" name="description_ar" value="{{$experience->description_ar}}" placeholder="description arabic">
+                                <input type="text" name="description_ar" value="{{$experience->description_ar}}"
+                                       placeholder="description arabic">
                                 <div>
                                     <div class="error error-description_ar"></div>
                                 </div>
                             </div>
 
 
-
-
                             <div class="col-lg-6 col-md-6  form-group">
                                 <label>start date </label>
-                                <input type="date" name="start_date" value="{{$experience->start_date}}" placeholder="start_date">
+                                <input type="date" name="start_date" value="{{$experience->start_date}}"
+                                       placeholder="start_date">
                                 <div>
                                     <div class="error error-start_date"></div>
 

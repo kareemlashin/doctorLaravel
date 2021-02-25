@@ -497,8 +497,6 @@ class doctorController extends Controller
             ], 200);
 
         }
-
-
     }
 
     public function createOrRemoveLike(Request $request)

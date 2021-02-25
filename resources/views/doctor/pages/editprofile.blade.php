@@ -526,6 +526,8 @@
                         url: "{{ route('customProfile') }}",
                         data: inputData,
                         success: function (data) {
+                            location.reload();
+
                             $("#go").removeAttr('disabled');
                             $("#success").html('');
                             $(".error").html('');

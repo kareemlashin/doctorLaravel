@@ -8,8 +8,12 @@ use App\Http\Requests\patient;
 use App\Http\Requests\Syndrome;
 use App\Http\Requests\Xray;
 use App\Models\diseasePatient;
+use App\Models\likepost;
 use App\Models\location;
 use App\Models\patientSyndrome;
+use App\Models\posts;
+use App\Models\ratingPost;
+use App\Models\tags;
 use App\Models\User;
 use App\Trait\Image;
 use Illuminate\Http\Request;
@@ -21,6 +25,7 @@ class patientController extends Controller
     use Image;
 
     public $path = 'upload/image/';
+
 
     //
     public function index()
@@ -248,9 +253,9 @@ class patientController extends Controller
     public function deleteMedicalTest(Request $request)
     {
         $patient = User::with(['patient'])->where('id', Auth::user()->id)->first();
-        $Xray=\App\Models\MedicalTests::where('id',$request->id)->where('patient_id',$patient->patient->id)->first();
+        $Xray = \App\Models\MedicalTests::where('id', $request->id)->where('patient_id', $patient->patient->id)->first();
         File::delete(public_path($Xray->image));
-        $delete=$Xray->delete();
+        $delete = $Xray->delete();
     }
 
     public function addXray()
@@ -291,12 +296,134 @@ class patientController extends Controller
     public function deleteXray(Request $request)
     {
         $patient = User::with(['patient'])->where('id', Auth::user()->id)->first();
-        $Xray=\App\Models\Xray::where('id',$request->id)->where('patient_id',$patient->patient->id)->first();
+        $Xray = \App\Models\Xray::where('id', $request->id)->where('patient_id', $patient->patient->id)->first();
         File::delete(public_path($Xray->image));
-        $delete=$Xray->delete();
+        $delete = $Xray->delete();
 
     }
 
+    public function posts()
+    {
+        $patient = User::with(['patient'])->where('id', Auth::user()->id)->first();
+        $tags = tags::all();
+        return view('patient.pages.posts', compact('patient', 'tags'));
+
+    }
+
+    public function getPosts(Request $request)
+    {
+        $posts = posts::with(['postTags', 'user.doctorprofile', 'postrate' => function ($q) {
+        }, 'likesPost' => function ($q) {
+        }])->withCount('likesPost')
+            ->withCount('postrate')->withAvg('postrate', 'rate');
+
+        if ($request->viewer) {
+            $posts = $posts->orderBy('viewer', $request->viewer);
+        }
+        if ($request->create_at) {
+            $posts = $posts->orderBy('create_at', $request->create_at);
+        }
+        if ($request->likes_post_count) {
+            $posts = $posts->orderBy('viewer', $request->likes_post_count);
+        }
+        if ($request->rate) {
+            $posts = $posts->orderBy('postrate_avg_rate', $request->rate);
+        }
+        if ($request->tags) {
+            $posts = $posts->where(function ($q) use ($request) {
+                $q->whereHas('postTags', function ($q) use ($request) {
+                    $q->whereIn('tag_id', $request->tags);
+                });
+            });
+        }
+        if ($request->title_en) {
+            $posts = $posts->orderBy('title_en', $request->title_en);
+        }
+
+        $posts = $posts->paginate(5);
+        return $posts;
+
+    }
+
+    public function singlePost($id)
+    {
+
+        $patient = User::with(
+            [
+                'patient',
+                'patient.genderPatient',
+                'patient.locationPatient',
+                'patient.patientSyndromes',
+                'patient.patientDiseases',
+                'patient.xRays',
+                'patient.medicalTests',
+                'userrate',
+                'likesUserPost'
+            ])->where('id', Auth::user()->id)->first();
+        $post = posts::with(['postTags', 'user.doctorprofile', 'postrate' => function ($q) {
+        }, 'likesPost' => function ($q) {
+        }])->withCount('likesPost')
+            ->withCount('postrate')->withAvg('postrate', 'rate')->find($id);
+
+        $viewr = ++$post->viewer;
+        $addView = $post->update([
+            'viewer' => $viewr
+        ]);
+        return view('patient.pages.tables.singlPost', compact('post', 'patient'));
+
+    }
+
+    public function ratingPost(Request $request)
+    {
+        $patient = User::find(Auth::user()->id);
+        $allRate = ratingPost::where('post_id', $request->post)->where('user_id', $patient->id)->first();
+
+        if ($allRate) {
+            $uprate = $allRate->update([
+                'rate' => $request->rate
+            ]);
+        } else {
+            $rate = ratingPost::create([
+                'user_id' => $patient->id,
+                'post_id' => $request->post,
+                'rate' => $request->rate
+            ]);
+        }
+        if ($rate || $uprate) {
+            return response()->json([
+                'status' => true,
+                'success' => 'rate  success',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => true,
+                'success' => 'please retry',
+            ], 200);
+        }
+    }
+
+    public function createOrRemoveLikePost(Request $request)
+    {
+        $patient = User::find(Auth::user()->id);
+        $postHasLike = likepost::where('user_id', $patient->id)->where('post_id', $request->post)->first();
+        if ($postHasLike) {
+            $postHasLike = $postHasLike->delete();
+        } else {
+            $likepost = likepost::create([
+                'user_id' => $patient->id
+                , 'post_id' => $request->post
+            ]);
+        }
+        return response()->json([
+            'status' => true,
+            'success' => 'please retry',
+        ], 200);
+
+    }
+
+    public function filter(Request $request)
+    {
+        return $request;
+    }
 }
 //
-
