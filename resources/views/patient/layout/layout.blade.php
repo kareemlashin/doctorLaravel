@@ -205,7 +205,8 @@
 
 
                         <li><a href=""><i class="fas fa-heart"></i>all product</a></li>
-                        <li><a href=""><i class="fas fa-heart"></i>all product</a></li>
+
+                        <li><a href="{{route('allDoctors')}}"><i class="fas fa-heart"></i>all Doctors </a></li>
                         <li><a href="{{route('allPosts')}}"><i class="fas fa-heart"></i>all posts</a></li>
                         <li><a href="{{ route('logout') }}"
                                onclick="event.preventDefault();

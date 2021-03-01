@@ -58,9 +58,16 @@ class User extends Authenticatable
     public function likesUserPost(){
         return $this->hasMany(likepost::class,'user_id');
     }
+    public function likesDoctor(){
+        return $this->hasMany(likeDoctor::class,'user_id');
+    }
+    public function rateDoctor(){
+        return $this->hasMany(rateDoctor::class,'user_id');
+    }
 
     public function patient()
     {
         return $this->hasOne(patient::class,'user_id');
     }
+
 }

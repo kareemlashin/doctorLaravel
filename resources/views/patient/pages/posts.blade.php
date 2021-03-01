@@ -199,6 +199,7 @@
                 data.tags = ids;
                 getData();
             });
+
             //
             $('.filter span').click(function () {
                 let filter_by = $(this).attr('filter-by');
@@ -243,6 +244,7 @@
                     likes_post_count: '',
                     rate: ''
                 };
+
                 $('input:checkbox').attr('checked', false);
                 getData();
 

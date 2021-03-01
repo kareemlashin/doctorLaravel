@@ -23,6 +23,13 @@ class profiledoctor extends Model
         return $this->hasMany(experience::class,'profiledoctors_id');
     }
 
+    public function likesDoctor(){
+        return $this->hasMany(likeDoctor::class,'profiledoctors_id');
+    }
+    public function rateDoctor(){
+        return $this->hasMany(rateDoctor::class,'profiledoctors_id');
+    }
+
     public function doctorprofile()
     {
         return $this->belongsTo(User::class, 'user_id');

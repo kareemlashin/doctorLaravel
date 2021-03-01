@@ -18,8 +18,10 @@
                         <div class="clinic-details-content">
                             <div class="clinic-block-one ">
                                 <div class="inner-box pb-5">
-                                    <figure class="image-box"><img src="{{asset($patient->patient->profile)}}" class=""
-                                                                   alt=""></figure>
+                                    <figure class="image-box">
+                                        <img src="{{asset($patient->patient->profile)}}" class=""
+                                                                   alt="">
+                                    </figure>
                                     <div class="content-box">
 
                                         <ul class="name-box clearfix">
@@ -41,8 +43,10 @@
                                         <div class="lower-box clearfix">
                                             <ul class="info clearfix">
                                                 <li>
-                                                    <i class="fas fa-map-marker-alt"></i>{{$patient->patient->locationPatient->country_en}}
-                                                    ,{{$patient->patient->locationPatient->city_ar}}</li>
+                                                    <i class="fas fa-map-marker-alt"></i>
+                                                    {{$patient->patient->locationPatient->country_en}}
+                                                    ,{{$patient->patient->locationPatient->city_ar}}
+                                                </li>
                                                 <li>
                                                     <i class="fas fa-phone"></i><a>({{$patient->patient->locationPatient->code}}
                                                         ) {{$patient->patient->phone}}</a></li>

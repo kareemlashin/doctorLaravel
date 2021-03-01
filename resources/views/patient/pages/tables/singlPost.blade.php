@@ -72,6 +72,7 @@
                         <div class="lower-content bg-white px-4">
                             <h3>{{$post->title_en}}</h3>
                             <div>
+
                                 @for($x=0; $x <round($post->postrate_avg_rate); $x++)
                                     <i class="fas fa-star ratee"></i>
                                 @endfor
@@ -85,6 +86,7 @@
                                 <span>
                                                 ({{$post->postrate_count}})
                                             </span>
+
                             </div>
                             <ul class="post-info">
                                 <li><img width="40px" height="40px" class="rounded-circle"
@@ -119,6 +121,7 @@
                                     <div id="review"></div>
                                 </div>
                             </div>
+
                             <button type="button" class="mt-3
                             @foreach($patient->likesUserPost as $like)
                             @if($post->id==$like->post_id && $patient->id == $like->user_id)
@@ -136,6 +139,7 @@
                                     {{$post->likes_post_count}}
                                 </span>
                             </button>
+
                         </div>
                     </div>
                 </div>

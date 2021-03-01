@@ -8,12 +8,17 @@ use App\Http\Requests\patient;
 use App\Http\Requests\Syndrome;
 use App\Http\Requests\Xray;
 use App\Models\diseasePatient;
+use App\Models\gender;
+use App\Models\likeDoctor;
 use App\Models\likepost;
 use App\Models\location;
 use App\Models\patientSyndrome;
 use App\Models\posts;
+use App\Models\rateDoctor;
 use App\Models\ratingPost;
+use App\Models\specialtie;
 use App\Models\tags;
+use App\Models\titles;
 use App\Models\User;
 use App\Trait\Image;
 use Illuminate\Http\Request;
@@ -310,6 +315,122 @@ class patientController extends Controller
 
     }
 
+    public function doctors()
+    {
+
+        $patient = User::with(['patient'])->where('id', Auth::user()->id)->first();
+        $genders = gender::all();
+        $locations = location::all();
+        $specialties = specialtie::all();
+        $titles = titles::all();
+        return view('patient.pages.doctors', compact('patient', 'genders', 'locations', 'specialties', 'titles'));
+
+        //
+    }
+
+    public function getDoctors(Request $request)
+    {
+        $Doctors = \App\Models\profiledoctor::with([
+            'doctorprofile',
+            'titlesdoctor',
+            'location',
+            'specialtiesdoctor',
+            'gender',
+        ]);
+
+        if ($request->name) {
+            $Doctors = $Doctors->where(function ($q) use ($request) {
+                $q->whereHas('doctorprofile', function ($q) use ($request) {
+                    $q->orderBy('name', $request->name);
+                });
+            });
+        }
+        if ($request->age) {
+            $Doctors = $Doctors->orderBy('birthday', $request->age);
+        }
+        if ($request->viewer) {
+            $Doctors = $Doctors->orderBy('view', $request->viewer);
+        }
+
+        if ($request->price) {
+            $Doctors = $Doctors->orderBy('price', $request->price);
+        }
+
+        if ($request->gender) {
+            $Doctors = $Doctors->where(function ($q) use ($request) {
+                $q->whereHas('gender', function ($q) use ($request) {
+                    $q->where('gender_id', $request->gender);
+                });
+            });
+        }
+        if ($request->location) {
+
+            $Doctors = $Doctors->where(function ($q) use ($request) {
+                $q->whereHas('location', function ($q) use ($request) {
+                    $q->where('location_id', $request->location);
+                });
+            });
+
+        }
+        if ($request->specialties) {
+            $Doctors = $Doctors->where(function ($q) use ($request) {
+                $q->whereHas('specialtiesdoctor', function ($q) use ($request) {
+                    $q->where('specialties_id', $request->specialties);
+                });
+            });
+        }
+        if ($request->titles) {
+            $Doctors = $Doctors->where(function ($q) use ($request) {
+                $q->whereHas('titlesdoctor', function ($q) use ($request) {
+                    $q->whereIn('title_id', $request->titles);
+                });
+            });
+        }
+
+        $Doctors = $Doctors->paginate(2);
+
+        return $Doctors;
+
+    }
+
+
+    public function singleDoctor($id)
+    {
+
+        $patient = User::with(
+            [
+                'patient',
+                'patient.genderPatient',
+                'patient.locationPatient',
+                'patient.patientSyndromes',
+                'patient.patientDiseases',
+                'patient.xRays',
+                'patient.medicalTests',
+                'userrate',
+                'likesUserPost',
+                'likesDoctor','rateDoctor.rateDoctor.doctorprofile'
+            ])
+            ->where('id', Auth::user()->id)->first();
+        $Doctors = \App\Models\profiledoctor::with([
+            'doctorprofile',
+            'titlesdoctor',
+            'location',
+            'specialtiesdoctor',
+            'experience',
+            'gender',
+            'service',
+            'offer',
+            'education',
+            'likesDoctor',
+        ])->withCount('likesDoctor')
+           // ->withCount('rateDoctor')->withAvg('rateDoctor', 'rate')
+            ->where('id',$id)->first();
+       return $Doctors;
+
+       // return view('patient.pages.tables.singleDoctor', compact('Doctors', 'patient'));
+
+    }
+
     public function getPosts(Request $request)
     {
         $posts = posts::with(['postTags', 'user.doctorprofile', 'postrate' => function ($q) {
@@ -336,6 +457,7 @@ class patientController extends Controller
                 });
             });
         }
+
         if ($request->title_en) {
             $posts = $posts->orderBy('title_en', $request->title_en);
         }
@@ -358,7 +480,7 @@ class patientController extends Controller
                 'patient.xRays',
                 'patient.medicalTests',
                 'userrate',
-                'likesUserPost'
+                'likesUserPost',
             ])->where('id', Auth::user()->id)->first();
         $post = posts::with(['postTags', 'user.doctorprofile', 'postrate' => function ($q) {
         }, 'likesPost' => function ($q) {
@@ -425,5 +547,48 @@ class patientController extends Controller
     {
         return $request;
     }
+    public function likeDoctor(Request $request){
+        $patient = User::find(Auth::user()->id);
+
+        $postHasLike = likeDoctor::where('user_id', $patient->id)->where('profiledoctors_id', $request->doctorId)->first();
+        if ($postHasLike) {
+            $postHasLike = $postHasLike->delete();
+        } else {
+            $doctor=likeDoctor::create([
+                'profiledoctors_id'=>$request->doctorId,
+                'user_id'=>$patient->id
+            ]);
+        }
+
+    }
+    public function rateDoctor(Request $request)
+    {
+        $doctor = User::find(Auth::user()->id);
+        $allRate  = rateDoctor::where('profiledoctors_id', $request->doctorId)->where('user_id', $doctor->id)->first();
+        if ($allRate) {
+            $uprate = $allRate->update([
+                'rate' => $request->rate
+            ]);
+        } else {
+            $rate = rateDoctor::create([
+                'user_id' => $doctor->id,
+                'profiledoctors_id' => $request->doctorId,
+                'rate' => $request->rate
+            ]);
+        }
+        if ($rate || $uprate) {
+            return response()->json([
+                'status' => true,
+                'success' => 'rate  success',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => true,
+                'success' => 'please retry',
+            ], 200);
+
+        }
+    }
+
 }
 //

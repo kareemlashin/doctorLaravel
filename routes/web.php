@@ -119,6 +119,14 @@ Route::group(['middleware' => ['role:patient', 'auth'], 'prefix' => 'patient'], 
         Route::get('filter', 'patientController@filter')->name('filter');
         Route::post('ratingPostPatient', 'patientController@ratingPost')->name('ratingPostPatient');
         Route::post('likePostPatient', 'patientController@createOrRemoveLikePost')->name('likePostPatient');
+
+        Route::get('getDoctors', 'patientController@getDoctors')->name('getDoctors');
+        Route::get('allDoctors', 'patientController@doctors')->name('allDoctors');
+        Route::get('singleDoctor/{id}', 'patientController@singleDoctor')->name('singleDoctor');
+
+        Route::post('likeDoctor', 'patientController@likeDoctor')->name('likeDoctor');
+        Route::post('rateDoctor', 'patientController@rateDoctor')->name('rateDoctor');
+
         Route::get('pag', 'patientController@pag')->name('pag');
 
     });
